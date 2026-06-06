@@ -1,0 +1,24 @@
+{
+  "name": "uxkd",
+  "version": "1.0.0",
+  "description": "Comprehensive grocery and expense management tool with budget tracking, savings goals, and financial analytics.",
+  "type": "module",
+  "scripts": {
+    "build": "sass scss/main.scss css/main.css --style=compressed --no-source-map",
+    "watch": "sass scss/main.scss css/main.css --watch",
+    "dev": "sass scss/main.scss css/main.css --watch",
+    "serve": "npx http-server -p 8080 -c-1"
+  },
+  "devDependencies": {
+    "sass": "^1.77.0"
+  },
+  "keywords": [
+    "expense-tracker",
+    "grocery",
+    "budget",
+    "finance",
+    "vanilla-js"
+  ],
+  "author": "UXKD Team",
+  "license": "MIT"
+}

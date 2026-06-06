@@ -1,0 +1,45 @@
+// =====================================================
+// THEME SYSTEM — Light & Dark Mode
+// =====================================================
+@use 'variables' as *;
+
+// ---- Light Theme (default) ----
+:root,
+[data-theme="light"] {
+    --bg-body: #{$bg-light};
+    --bg-surface: #{$surface-light};
+    --bg-surface-2: #{$surface-light-2};
+    --border-color: #{$border-light};
+    --text-primary: #{$text-light};
+    --text-secondary: #{$text-light-2};
+    --text-muted: #{$text-muted-light};
+    --scrollbar-thumb: #cbd5e1;
+    --scrollbar-thumb-hover: #94a3b8;
+    --shadow-color: rgba(15, 23, 42, 0.08);
+    --overlay: rgba(15, 23, 42, 0.5);
+    --gradient-primary: linear-gradient(135deg, #{$color-primary} 0%, #{$color-secondary} 100%);
+    --gradient-success: linear-gradient(135deg, #{$color-primary} 0%, #{$color-primary-dark} 100%);
+    --gradient-danger: linear-gradient(135deg, #{$color-danger} 0%, #{$color-danger-dark} 100%);
+    --gradient-warning: linear-gradient(135deg, #{$color-warning} 0%, #d97706 100%);
+    --gradient-info: linear-gradient(135deg, #{$color-info} 0%, #1d4ed8 100%);
+}
+
+// ---- Dark Theme ----
+[data-theme="dark"] {
+    --bg-body: #{$bg-dark};
+    --bg-surface: #{$surface-dark};
+    --bg-surface-2: #{$surface-dark-2};
+    --border-color: #{$border-dark};
+    --text-primary: #{$text-dark};
+    --text-secondary: #{$text-dark-2};
+    --text-muted: #{$text-muted-dark};
+    --scrollbar-thumb: #334155;
+    --scrollbar-thumb-hover: #475569;
+    --shadow-color: rgba(0, 0, 0, 0.4);
+    --overlay: rgba(0, 0, 0, 0.7);
+    --gradient-primary: linear-gradient(135deg, #{$color-primary} 0%, #{$color-secondary} 100%);
+    --gradient-success: linear-gradient(135deg, #{$color-primary} 0%, #{$color-primary-dark} 100%);
+    --gradient-danger: linear-gradient(135deg, #{$color-danger} 0%, #{$color-danger-dark} 100%);
+    --gradient-warning: linear-gradient(135deg, #{$color-warning} 0%, #d97706 100%);
+    --gradient-info: linear-gradient(135deg, #{$color-info} 0%, #1d4ed8 100%);
+}

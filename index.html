@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <meta name="description" content="Comprehensive grocery and expense management tool with budget tracking, savings goals, and financial analytics.">
+    <meta name="theme-color" content="#10b981">
+    <title>UXKD — Smart Grocery & Expense Manager</title>
+
+    <!-- External Libraries -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+
+    <!-- Compiled CSS -->
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <!-- ============ TOAST CONTAINER ============ -->
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+    <!-- ============ MODAL ROOT ============ -->
+    <div id="modal-root" class="modal-root" aria-hidden="true"></div>
+
+    <!-- ============ APP SHELL ============ -->
+    <div class="app-shell">
+
+        <!-- SIDEBAR -->
+        <aside class="sidebar" id="sidebar" aria-label="Main navigation">
+            <div class="sidebar__brand">
+                <div class="sidebar__logo" aria-hidden="true">
+                    <i class="fa-solid fa-cart-shopping"></i>
+                </div>
+                <div class="sidebar__title">
+                    <h1>UXKD</h1>
+                    <span>Smart Money Manager</span>
+                </div>
+            </div>
+
+            <nav class="sidebar__nav" role="navigation">
+                <ul class="nav-list">
+                    <li><a href="#dashboard" class="nav-link is-active" data-view="dashboard">
+                        <i class="fa-solid fa-chart-pie"></i><span>Dashboard</span>
+                    </a></li>
+                    <li><a href="#expenses" class="nav-link" data-view="expenses">
+                        <i class="fa-solid fa-receipt"></i><span>Expenses</span>
+                    </a></li>
+                    <li><a href="#grocery" class="nav-link" data-view="grocery">
+                        <i class="fa-solid fa-basket-shopping"></i><span>Grocery List</span>
+                    </a></li>
+                    <li><a href="#budget" class="nav-link" data-view="budget">
+                        <i class="fa-solid fa-wallet"></i><span>Budget</span>
+                    </a></li>
+                    <li><a href="#savings" class="nav-link" data-view="savings">
+                        <i class="fa-solid fa-piggy-bank"></i><span>Savings</span>
+                    </a></li>
+                    <li><a href="#reports" class="nav-link" data-view="reports">
+                        <i class="fa-solid fa-chart-line"></i><span>Reports</span>
+                    </a></li>
+                </ul>
+            </nav>
+
+            <div class="sidebar__footer">
+                <button class="btn btn--ghost btn--block" id="exportDataBtn" type="button">
+                    <i class="fa-solid fa-download"></i> Export Data
+                </button>
+                <button class="btn btn--ghost btn--block" id="importDataBtn" type="button">
+                    <i class="fa-solid fa-upload"></i> Import Data
+                </button>
+                <input type="file" id="importFileInput" accept="application/json" hidden>
+            </div>
+        </aside>
+
+        <!-- BACKDROP for mobile sidebar -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+
+        <!-- MAIN -->
+        <main class="main">
+            <!-- TOP BAR -->
+            <header class="topbar">
+                <button class="topbar__menu" id="menuToggle" aria-label="Toggle menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+
+                <div class="topbar__title">
+                    <h2 id="viewTitle">Dashboard</h2>
+                    <p id="viewSubtitle">Overview of your financial health</p>
+                </div>
+
+                <div class="topbar__actions">
+                    <div class="search">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        <input type="search" id="globalSearch" placeholder="Search transactions, items..." aria-label="Search">
+                    </div>
+                    <button class="icon-btn" id="themeToggle" aria-label="Toggle theme">
+                        <i class="fa-solid fa-moon"></i>
+                    </button>
+                    <button class="icon-btn icon-btn--primary" id="quickAddBtn" aria-label="Quick add">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- VIEWS CONTAINER -->
+            <div class="view-container" id="viewContainer">
+
+                <!-- ============ DASHBOARD VIEW ============ -->
+                <section class="view is-active" id="view-dashboard" data-view="dashboard">
+                    <div class="grid grid--kpi">
+                        <article class="card card--kpi" data-tone="success">
+                            <div class="card__icon"><i class="fa-solid fa-indian-rupee-sign"></i></div>
+                            <div class="card__body">
+                                <span class="card__label">Monthly Salary</span>
+                                <span class="card__value" id="kpiSalary">₹0</span>
+                                <span class="card__delta" id="kpiSalaryMeta">Set your salary to begin</span>
+                            </div>
+                        </article>
+                        <article class="card card--kpi" data-tone="danger">
+                            <div class="card__icon"><i class="fa-solid fa-arrow-up-right-from-square"></i></div>
+                            <div class="card__body">
+                                <span class="card__label">Spent This Month</span>
+                                <span class="card__value" id="kpiSpent">₹0</span>
+                                <span class="card__delta" id="kpiSpentMeta">0% of salary</span>
+                            </div>
+                        </article>
+                        <article class="card card--kpi" data-tone="primary">
+                            <div class="card__icon"><i class="fa-solid fa-piggy-bank"></i></div>
+                            <div class="card__body">
+                                <span class="card__label">Saved This Month</span>
+                                <span class="card__value" id="kpiSaved">₹0</span>
+                                <span class="card__delta" id="kpiSavedMeta">Target: ₹0</span>
+                            </div>
+                        </article>
+                        <article class="card card--kpi" data-tone="warning">
+                            <div class="card__icon"><i class="fa-solid fa-fire"></i></div>
+                            <div class="card__body">
+                                <span class="card__label">Daily Allowance Left</span>
+                                <span class="card__value" id="kpiDaily">₹0</span>
+                                <span class="card__delta" id="kpiDailyMeta">Based on remaining days</span>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="grid grid--2-1 mt-24">
+                        <article class="card">
+                            <header class="card__header">
+                                <h3 class="card__title">Spending Trend</h3>
+                                <div class="segmented" role="tablist" id="trendRange">
+                                    <button class="segmented__btn is-active" data-range="7">7D</button>
+                                    <button class="segmented__btn" data-range="30">30D</button>
+                                    <button class="segmented__btn" data-range="90">90D</button>
+                                </div>
+                            </header>
+                            <div class="card__body">
+                                <div class="chart-wrap">
+                                    <canvas id="trendChart" aria-label="Spending trend"></canvas>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="card">
+                            <header class="card__header">
+                                <h3 class="card__title">Category Breakdown</h3>
+                            </header>
+                            <div class="card__body">
+                                <div class="chart-wrap chart-wrap--donut">
+                                    <canvas id="categoryChart" aria-label="Category breakdown"></canvas>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="grid grid--1-2 mt-24">
+                        <article class="card">
+                            <header class="card__header">
+                                <h3 class="card__title">Budget Allocation (50/30/20)</h3>
+                            </header>
+                            <div class="card__body">
+                                <div class="chart-wrap">
+                                    <canvas id="budgetRuleChart" aria-label="Budget allocation"></canvas>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="card">
+                            <header class="card__header">
+                                <h3 class="card__title">Recent Transactions</h3>
+                                <a href="#expenses" class="link" data-view-link="expenses">View all <i class="fa-solid fa-arrow-right"></i></a>
+                            </header>
+                            <div class="card__body card__body--scroll">
+                                <ul class="tx-list" id="recentTxList">
+                                    <li class="empty-state">No transactions yet. Start by adding an expense.</li>
+                                </ul>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- ============ EXPENSES VIEW ============ -->
+                <section class="view" id="view-expenses" data-view="expenses">
+                    <div class="toolbar">
+                        <div class="toolbar__filters">
+                            <select class="select" id="filterCategory" aria-label="Filter by category">
+                                <option value="">All Categories</option>
+                            </select>
+                            <select class="select" id="filterPeriod" aria-label="Filter by period">
+                                <option value="month">This Month</option>
+                                <option value="last">Last Month</option>
+                                <option value="7">Last 7 Days</option>
+                                <option value="30">Last 30 Days</option>
+                                <option value="all">All Time</option>
+                            </select>
+                            <select class="select" id="filterType" aria-label="Filter by type">
+                                <option value="">All Types</option>
+                                <option value="expense">Expense</option>
+                                <option value="income">Income</option>
+                            </select>
+                        </div>
+                        <button class="btn btn--primary" id="addExpenseBtn">
+                            <i class="fa-solid fa-plus"></i> Add Transaction
+                        </button>
+                    </div>
+
+                    <article class="card mt-16">
+                        <div class="table-wrap">
+                            <table class="data-table" id="expensesTable">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Category</th>
+                                        <th>Type</th>
+                                        <th class="ta-right">Amount</th>
+                                        <th class="ta-right">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="expensesTableBody"></tbody>
+                            </table>
+                        </div>
+                        <div class="table-empty" id="expensesEmpty">
+                            <i class="fa-solid fa-receipt"></i>
+                            <p>No transactions found for the selected filters.</p>
+                        </div>
+                    </article>
+                </section>
+
+                <!-- ============ GROCERY VIEW ============ -->
+                <section class="view" id="view-grocery" data-view="grocery">
+                    <div class="grid grid--2-1">
+                        <article class="card">
+                            <header class="card__header">
+                                <h3 class="card__title">Shopping List</h3>
+                                <div class="toolbar__filters">
+                                    <select class="select" id="groceryFilter" aria-label="Filter grocery list">
+                                        <option value="all">All Items</option>
+                                        <option value="pending">Pending</option>
+                                        <option value="bought">Purchased</option>
+                                    </select>
+                                </div>
+                            </header>
+                            <div class="card__body">
+                                <form class="grocery-form" id="groceryForm" autocomplete="off">
+                                    <div class="grocery-form__row">
+                                        <input type="text" class="input" id="groceryName" placeholder="Item name (e.g. Rice, Milk)" required>
+                                        <input type="number" class="input" id="groceryQty" placeholder="Qty" min="1" value="1" required>
+                                        <select class="select" id="groceryUnit">
+                                            <option value="pcs">pcs</option>
+                                            <option value="kg">kg</option>
+                                            <option value="g">g</option>
+                                            <option value="L">L</option>
+                                            <option value="ml">ml</option>
+                                            <option value="pack">pack</option>
+                                        </select>
+                                        <input type="number" class="input" id="groceryPrice" placeholder="Est. Price" min="0" step="0.01">
+                                        <select class="select" id="groceryCategory">
+                                            <option value="Staples">Staples</option>
+                                            <option value="Vegetables">Vegetables</option>
+                                            <option value="Fruits">Fruits</option>
+                                            <option value="Dairy">Dairy</option>
+                                            <option value="Snacks">Snacks</option>
+                                            <option value="Beverages">Beverages</option>
+                                            <option value="Household">Household</option>
+                                            <option value="Personal Care">Personal Care</option>
+                                            <option value="Other">Other</option>
+                                        </select>
+                                        <button type="submit" class="btn btn--primary">
+                                            <i class="fa-solid fa-plus"></i> Add
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <ul class="grocery-list" id="groceryList"></ul>
+                                <div class="empty-state" id="groceryEmpty" hidden>
+                                    <i class="fa-solid fa-basket-shopping"></i>
+                                    <p>Your grocery list is empty. Add items to get started.</p>
+                                </div>
+                            </div>
+                            <footer class="card__footer grocery-footer">
+                                <div class="grocery-stats">
+                                    <span><i class="fa-solid fa-list-check"></i> <strong id="groceryCount">0</strong> items</span>
+                                    <span><i class="fa-solid fa-circle-check"></i> <strong id="groceryBought">0</strong> bought</span>
+                                    <span class="grocery-stats__total">Est. Total: <strong id="groceryTotal">₹0</strong></span>
+                                </div>
+                                <div class="grocery-actions">
+                                    <button class="btn btn--secondary" id="markAllBoughtBtn">
+                                        <i class="fa-solid fa-check-double"></i> Mark All Bought
+                                    </button>
+                                    <button class="btn btn--success" id="convertToExpenseBtn">
+                                        <i class="fa-solid fa-file-invoice-dollar"></i> Convert Bought to Expense
+                                    </button>
+                                    <button class="btn btn--ghost" id="clearGroceryBtn">
+                                        <i class="fa-solid fa-trash"></i> Clear List
+                                    </button>
+                                </div>
+                            </footer>
+                        </article>
+
+                        <article class="card">
+                            <header class="card__header">
+                                <h3 class="card__title">Smart Suggestions</h3>
+                            </header>
+                            <div class="card__body">
+                                <p class="muted">Based on your buying patterns, you may need:</p>
+                                <ul class="suggestion-list" id="suggestionList"></ul>
+                            </div>
+                            <header class="card__header">
+                                <h3 class="card__title">Shopping History</h3>
+                            </header>
+                            <div class="card__body card__body--scroll">
+                                <ul class="history-list" id="groceryHistory"></ul>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- ============ BUDGET VIEW ============ -->
+                <section class="view" id="view-budget" data-view="budget">
+                    <div class="grid grid--2-1">
+                        <article class="card">
+                            <header class="card__header">
+                                <h3 class="card__title">Monthly Budget Setup</h3>
+                            </header>
+                            <div class="card__body">
+                                <form id="budgetForm" class="form">
+                                    <div class="form__row">
+                                        <label class="form__label" for="budgetSalary">Monthly Salary (₹)</label>
+                                        <input type="number" class="input" id="budgetSalary" min="0" step="0.01" required>
+                                    </div>
+                                    <div class="form__row">
+                                        <label class="form__label" for="budgetNeeds">Needs (50%) — Rent, Bills, Groceries</label>
+                                        <input type="number" class="input" id="budgetNeeds" min="0" step="0.01">
+                                    </div>
+                                    <div class="form__row">
+                                        <label class="form__label" for="budgetWants">Wants (30%) — Entertainment, Dining</label>
+                                        <input type="number" class="input" id="budgetWants" min="0" step="0.01">
+                                    </div>
+                                    <div class="form__row">
+                                        <label class="form__label" for="budgetSavings">Savings (20%) — Investments, Goals</label>
+                                        <input type="number" class="input" id="budgetSavings" min="0" step="0.01">
+                                    </div>
+                                    <div class="form__actions">
+                                        <button type="button" class="btn btn--ghost" id="autoDistributeBtn">
+                                            <i class="fa-solid fa-wand-magic-sparkles"></i> Auto 50/30/20
+                                        </button>
+                                        <button type="submit" class="btn btn--primary">
+                                            <i class="fa-solid fa-floppy-disk"></i> Save Budget
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </article>
+
+                        <article class="card">
+                            <header class="card__header">
+                                <h3 class="card__title">Category Budgets</h3>
+                            </header>
+                            <div class="card__body">
+                                <p class="muted">Set per-category limits to control spending.</p>
+                                <div id="categoryBudgetList" class="category-budget-list"></div>
+                                <button class="btn btn--secondary btn--block mt-16" id="addCategoryBudgetBtn">
+                                    <i class="fa-solid fa-plus"></i> Add Category Limit
+                                </button>
+                            </div>
+                        </article>
+                    </div>
+
+                    <article class="card mt-24">
+                        <header class="card__header">
+                            <h3 class="card__title">Budget vs Actual</h3>
+                        </header>
+                        <div class="card__body">
+                            <div class="chart-wrap">
+                                <canvas id="budgetVsActualChart" aria-label="Budget vs actual"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+
+                <!-- ============ SAVINGS VIEW ============ -->
+                <section class="view" id="view-savings" data-view="savings">
+                    <div class="grid grid--kpi">
+                        <article class="card card--kpi" data-tone="success">
+                            <div class="card__icon"><i class="fa-solid fa-vault"></i></div>
+                            <div class="card__body">
+                                <span class="card__label">Total Savings</span>
+                                <span class="card__value" id="totalSavings">₹0</span>
+                            </div>
+                        </article>
+                        <article class="card card--kpi" data-tone="primary">
+                            <div class="card__icon"><i class="fa-solid fa-bullseye"></i></div>
+                            <div class="card__body">
+                                <span class="card__label">Active Goals</span>
+                                <span class="card__value" id="activeGoals">0</span>
+                            </div>
+                        </article>
+                        <article class="card card--kpi" data-tone="warning">
+                            <div class="card__icon"><i class="fa-solid fa-percent"></i></div>
+                            <div class="card__body">
+                                <span class="card__label">Avg. Savings Rate</span>
+                                <span class="card__value" id="savingsRate">0%</span>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="flex-between mt-24">
+                        <h3>Savings Goals</h3>
+                        <button class="btn btn--primary" id="addGoalBtn">
+                            <i class="fa-solid fa-plus"></i> New Goal
+                        </button>
+                    </div>
+
+                    <div class="grid grid--3 mt-16" id="goalsList">
+                        <!-- Goal cards injected here -->
+                    </div>
+
+                    <div class="empty-state" id="goalsEmpty" hidden>
+                        <i class="fa-solid fa-piggy-bank"></i>
+                        <p>No savings goals yet. Create your first goal to start tracking.</p>
+                    </div>
+                </section>
+
+                <!-- ============ REPORTS VIEW ============ -->
+                <section class="view" id="view-reports" data-view="reports">
+                    <div class="toolbar">
+                        <div class="toolbar__filters">
+                            <select class="select" id="reportMonth">
+                                <!-- Months injected dynamically -->
+                            </select>
+                            <button class="btn btn--secondary" id="exportCsvBtn">
+                                <i class="fa-solid fa-file-csv"></i> Export CSV
+                            </button>
+                            <button class="btn btn--secondary" id="printReportBtn">
+                                <i class="fa-solid fa-print"></i> Print
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid--3 mt-16">
+                        <article class="card">
+                            <div class="card__body">
+                                <span class="card__label">Total Income</span>
+                                <span class="card__value text-success" id="reportIncome">₹0</span>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <div class="card__body">
+                                <span class="card__label">Total Expenses</span>
+                                <span class="card__value text-danger" id="reportExpense">₹0</span>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <div class="card__body">
+                                <span class="card__label">Net Savings</span>
+                                <span class="card__value text-primary" id="reportNet">₹0</span>
+                            </div>
+                        </article>
+                    </div>
+
+                    <div class="grid grid--2 mt-24">
+                        <article class="card">
+                            <header class="card__header">
+                                <h3 class="card__title">Daily Spending</h3>
+                            </header>
+                            <div class="card__body">
+                                <div class="chart-wrap">
+                                    <canvas id="dailySpendChart" aria-label="Daily spending"></canvas>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="card">
+                            <header class="card__header">
+                                <h3 class="card__title">Top Categories</h3>
+                            </header>
+                            <div class="card__body">
+                                <div class="chart-wrap">
+                                    <canvas id="topCatChart" aria-label="Top categories"></canvas>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+
+                    <article class="card mt-24">
+                        <header class="card__header">
+                            <h3 class="card__title">Monthly Comparison</h3>
+                        </header>
+                        <div class="card__body">
+                            <div class="chart-wrap chart-wrap--tall">
+                                <canvas id="monthlyCompareChart" aria-label="Monthly comparison"></canvas>
+                            </div>
+                        </div>
+                    </article>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- External Libraries (vendored as CDN for offline use cases, can be replaced) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <!-- App Scripts (ES6 Modules) -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>

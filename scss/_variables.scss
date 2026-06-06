@@ -1,0 +1,99 @@
+// =====================================================
+// VARIABLES — Design Tokens
+// =====================================================
+
+// ---- Color Palette ----
+$color-primary: #10b981;
+$color-primary-dark: #059669;
+$color-primary-light: #d1fae5;
+$color-secondary: #6366f1;
+$color-secondary-dark: #4f46e5;
+$color-accent: #f59e0b;
+$color-danger: #ef4444;
+$color-danger-dark: #dc2626;
+$color-success: #10b981;
+$color-warning: #f59e0b;
+$color-info: #3b82f6;
+
+// ---- Light Theme ----
+$bg-light: #f8fafc;
+$bg-light-2: #f1f5f9;
+$surface-light: #ffffff;
+$surface-light-2: #f8fafc;
+$border-light: #e2e8f0;
+$text-light: #0f172a;
+$text-light-2: #475569;
+$text-muted-light: #94a3b8;
+
+// ---- Dark Theme ----
+$bg-dark: #0b1220;
+$bg-dark-2: #0f172a;
+$surface-dark: #131c2e;
+$surface-dark-2: #1a2438;
+$border-dark: #1e293b;
+$text-dark: #e2e8f0;
+$text-dark-2: #94a3b8;
+$text-muted-dark: #64748b;
+
+// ---- Semantic (use these in code) ----
+$bg-body: var(--bg-body);
+$bg-surface: var(--bg-surface);
+$bg-surface-2: var(--bg-surface-2);
+$border-color: var(--border-color);
+$text-primary: var(--text-primary);
+$text-secondary: var(--text-secondary);
+$text-muted: var(--text-muted);
+
+// ---- Spacing ----
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 20px;
+$space-6: 24px;
+$space-8: 32px;
+$space-10: 40px;
+$space-12: 48px;
+$space-16: 64px;
+
+// ---- Radius ----
+$radius-sm: 6px;
+$radius-md: 10px;
+$radius-lg: 16px;
+$radius-xl: 24px;
+$radius-full: 999px;
+
+// ---- Shadow ----
+$shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+$shadow-xl: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+
+// ---- Typography ----
+$font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+$font-mono: 'JetBrains Mono', 'Courier New', monospace;
+$fs-xs: 0.75rem;
+$fs-sm: 0.875rem;
+$fs-base: 1rem;
+$fs-lg: 1.125rem;
+$fs-xl: 1.25rem;
+$fs-2xl: 1.5rem;
+$fs-3xl: 1.875rem;
+$fs-4xl: 2.25rem;
+
+// ---- Breakpoints ----
+$bp-sm: 640px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;
+
+// ---- Z-Index ----
+$z-sidebar: 100;
+$z-topbar: 90;
+$z-modal: 1000;
+$z-toast: 1100;
+
+// ---- Transitions ----
+$transition-fast: 150ms ease;
+$transition-base: 250ms ease;
+$transition-slow: 400ms ease;

@@ -1,0 +1,78 @@
+// =====================================================
+// MIXINS — Reusable Style Patterns
+// =====================================================
+@use 'variables' as *;
+
+// Responsive breakpoints
+@mixin sm { @media (min-width: $bp-sm) { @content; } }
+@mixin md { @media (min-width: $bp-md) { @content; } }
+@mixin lg { @media (min-width: $bp-lg) { @content; } }
+@mixin xl { @media (min-width: $bp-xl) { @content; } }
+
+// Mobile first (max-width)
+@mixin mobile { @media (max-width: ($bp-md - 1)) { @content; } }
+@mixin tablet { @media (max-width: ($bp-lg - 1)) { @content; } }
+
+// Flex helpers
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@mixin flex-between {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+@mixin flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+// Card style
+@mixin card-base {
+    background: $bg-surface;
+    border: 1px solid $border-color;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+    transition: box-shadow $transition-base, transform $transition-base;
+}
+
+// Truncate text
+@mixin truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+// Custom scrollbar
+@mixin custom-scrollbar {
+    &::-webkit-scrollbar { width: 8px; height: 8px; }
+    &::-webkit-scrollbar-track { background: transparent; }
+    &::-webkit-scrollbar-thumb {
+        background: var(--scrollbar-thumb);
+        border-radius: $radius-full;
+    }
+    &::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+}
+
+// Smooth focus ring
+@mixin focus-ring {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    &:focus-visible {
+        outline-color: $color-primary;
+        box-shadow: 0 0 0 3px rgba($color-primary, 0.2);
+    }
+}
+
+// Truncate multi-line
+@mixin line-clamp($lines: 2) {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

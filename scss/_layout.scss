@@ -1,0 +1,288 @@
+// =====================================================
+// LAYOUT — App Shell, Sidebar, Topbar, Views
+// =====================================================
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// ---- App Shell ----
+.app-shell {
+    display: grid;
+    grid-template-columns: 260px 1fr;
+    min-height: 100vh;
+
+    @include mobile {
+        grid-template-columns: 1fr;
+    }
+}
+
+// ---- Sidebar ----
+.sidebar {
+    background: $bg-surface;
+    border-right: 1px solid $border-color;
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    z-index: $z-sidebar;
+    transition: transform $transition-base;
+
+    @include mobile {
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 280px;
+        transform: translateX(-100%);
+        box-shadow: $shadow-xl;
+    }
+
+    &.is-open {
+        @include mobile {
+            transform: translateX(0);
+        }
+    }
+
+    &__brand {
+        @include flex-between;
+        padding: $space-5 $space-5;
+        border-bottom: 1px solid $border-color;
+        gap: $space-3;
+    }
+
+    &__logo {
+        width: 42px;
+        height: 42px;
+        border-radius: $radius-md;
+        background: var(--gradient-primary);
+        color: white;
+        @include flex-center;
+        font-size: $fs-xl;
+        box-shadow: $shadow-md;
+    }
+
+    &__title {
+        h1 {
+            font-size: $fs-lg;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        span {
+            font-size: $fs-xs;
+            color: $text-muted;
+            display: block;
+            margin-top: 2px;
+        }
+    }
+
+    &__nav {
+        flex: 1;
+        padding: $space-4 $space-3;
+        overflow-y: auto;
+        @include custom-scrollbar;
+    }
+
+    &__footer {
+        padding: $space-3;
+        border-top: 1px solid $border-color;
+        display: flex;
+        flex-direction: column;
+        gap: $space-2;
+    }
+}
+
+.sidebar-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--overlay);
+    z-index: $z-sidebar - 1;
+    opacity: 0;
+    transition: opacity $transition-base;
+
+    &.is-visible {
+        @include mobile {
+            display: block;
+            opacity: 1;
+        }
+    }
+}
+
+// Nav list
+.nav-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    padding: $space-3 $space-4;
+    border-radius: $radius-md;
+    color: $text-secondary;
+    font-weight: 500;
+    font-size: $fs-sm;
+    transition: all $transition-fast;
+    position: relative;
+
+    i {
+        width: 20px;
+        text-align: center;
+        font-size: $fs-base;
+    }
+
+    &:hover {
+        background: $bg-surface-2;
+        color: $text-primary;
+    }
+
+    &.is-active {
+        background: rgba($color-primary, 0.12);
+        color: $color-primary;
+        font-weight: 600;
+
+        &::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 25%;
+            bottom: 25%;
+            width: 3px;
+            background: $color-primary;
+            border-radius: 0 3px 3px 0;
+        }
+    }
+}
+
+// ---- Top Bar ----
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: $z-topbar;
+    background: $bg-surface;
+    border-bottom: 1px solid $border-color;
+    padding: $space-4 $space-6;
+    @include flex-between;
+    gap: $space-4;
+    backdrop-filter: blur(8px);
+    background: rgba(255, 255, 255, 0.85);
+
+    [data-theme="dark"] & {
+        background: rgba(19, 28, 46, 0.85);
+    }
+
+    @include mobile {
+        padding: $space-3 $space-4;
+    }
+
+    &__menu {
+        display: none;
+        width: 40px;
+        height: 40px;
+        border-radius: $radius-md;
+        @include flex-center;
+        font-size: $fs-lg;
+        color: $text-primary;
+        transition: background $transition-fast;
+
+        &:hover { background: $bg-surface-2; }
+
+        @include mobile { display: flex; }
+    }
+
+    &__title {
+        flex: 1;
+        min-width: 0;
+
+        h2 {
+            font-size: $fs-xl;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+
+            @include mobile { font-size: $fs-lg; }
+        }
+        p {
+            font-size: $fs-sm;
+            color: $text-muted;
+            @include truncate;
+        }
+    }
+
+    &__actions {
+        display: flex;
+        align-items: center;
+        gap: $space-3;
+
+        @include mobile {
+            .search { display: none; }
+        }
+    }
+}
+
+// Search
+.search {
+    position: relative;
+    width: 280px;
+
+    i {
+        position: absolute;
+        left: $space-3;
+        top: 50%;
+        transform: translateY(-50%);
+        color: $text-muted;
+        font-size: $fs-sm;
+    }
+
+    input {
+        width: 100%;
+        height: 40px;
+        padding: 0 $space-3 0 $space-10;
+        background: $bg-surface-2;
+        border: 1px solid transparent;
+        border-radius: $radius-md;
+        font-size: $fs-sm;
+        transition: all $transition-fast;
+
+        &::placeholder { color: $text-muted; }
+        &:focus {
+            outline: none;
+            background: $bg-surface;
+            border-color: $color-primary;
+            box-shadow: 0 0 0 3px rgba($color-primary, 0.15);
+        }
+    }
+
+    @include tablet { width: 200px; }
+}
+
+// ---- Main ----
+.main {
+    min-width: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+// ---- View Container ----
+.view-container {
+    flex: 1;
+    padding: $space-6;
+    max-width: 1600px;
+    width: 100%;
+    margin: 0 auto;
+
+    @include mobile { padding: $space-4; }
+}
+
+.view {
+    display: none;
+    animation: fadeIn 0.3s ease;
+
+    &.is-active { display: block; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
